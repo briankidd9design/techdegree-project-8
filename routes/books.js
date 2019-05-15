@@ -9,16 +9,12 @@ const Op = Sequelize.Op;
 
 /* GET books for full list of books */
 router.get('/', function(req, res, next) {
-  Book.findAll({order:[["Year", "DESC"]]}).then(function(books){
-    if(book){
-        res.render("index", {books: books, title: "Books Library" });
-    } else {
-        res.sendStatus(404);
-    }
-   }).catch(function(err){
-     res.sendStatus(500, err);
-   });
-});
+    Book.findAll({order: [["Year", "DESC"]]}).then(function(books){
+      res.render("index", {books: books, title: "Brian's Library" });
+    }).catch(function(error){
+        res.send(500, error);
+     });
+  });
 
 /* Create a new book form. */
 router.get('/new', function(req, res, next) {
@@ -27,22 +23,20 @@ router.get('/new', function(req, res, next) {
 
 /* POST create book. */
 router.post('/', function(req, res, next) {
-  Book.create(req.body).then(function(books){//the req.body is the data from the form
-    res.redirect("/books/" + books.id)//it matches one to one from the form input to the properties on the form models 
-  }).catch(function(err){//when the database is finished saving the article record the database will
-    if(err.name === "SequelizeValidationError"){//redirect to the new article
+  Book.create(req.body).then(function(book){//the req.body is the data from the form
+    res.redirect("/books/")//it matches one to one from the form input to the properties on the form models 
+  }).catch(function(error){//when the database is finished saving the article record the database will
+    if(error.name === "SequelizeValidationError"){//redirect to the new article
       res.render("books/new-book", {//The views require instance methods on each of the article instances
         book: Book.build(req.body), 
-        title: "New Book",
-        errors: err.errors
-      });
+        errors: error.errors,
+        title: "New Book"})
     } else {
-      throw err;
+      throw error;
     }
-  }).catch(function(err){
-    res.sendStatus(500, err);
+  }).catch(function(error){
+    res.sendStatus(500, error);
   }); 
-
 });
 
 /* Edit book form. */
@@ -54,21 +48,7 @@ router.get("/:id/edit", function(req, res, next){
     } else {
       res.sendStatus(404);
     }
-  }).catch(function(err){
-    res.sendStatus(500);
-  });
-});
-
-/* Delete article form. */
-router.get("/:id/delete", function(req, res, next){
-  //var article = find(req.params.id);  
-  Article.findById(req.params.id).then(function(article){
-  if(article){
-    res.render("articles/show", {article: article, title: article.title});
-  } else {
-    res.sendStatus(404);
-  }
-  }).catch(function(err){
+  }).catch(function(error){
     res.sendStatus(500);
   });
 });
@@ -77,12 +57,12 @@ router.get("/:id/delete", function(req, res, next){
 router.get("/:id", function(req, res, next){
   Book.findByPk(req.params.id).then(function(book){
   if(book){
-    res.render("books/show-book", {book: book, title: book.title});
+    res.render("books/update-book", {book: book, title: book.title});
   } else {
     res.render("page-not-found", { book: {}, title: "Page Not Found" });
   }
-  }).catch(function(err){
-    res.sendStatus(500, err);
+  }).catch(function(error){
+    res.sendStatus(500, error);
   });
 });
 
@@ -90,26 +70,26 @@ router.get("/:id", function(req, res, next){
 router.put("/:id", function(req, res, next){
   Book.findByPk(req.params.id).then(function(book){
   if(book){
-    return article.update(req.body);
+    return book.update(req.body);
   } else {
     res.sendStatus(404);
   }
   }).then (function(book){//this is the updated book
-    res.redirect("/books/" + book.id); 
-  }).catch(function(err){
-    if(err.name === "SequelizeValidationError"){
+    res.redirect("/"); 
+  }).catch(function(error){
+    if(error.name === "SequelizeValidationError"){
       var book = Book.build(req.body);
       book.id = req.params.id;
       res.render("books/update-book", {
         book: book,
         title: "Edit Book",
-        errors: err.errors
+        errors: error.errors
       });
     } else {
-      throw err;
+      throw error;
     }
-  }).catch(function(err){
-    res.sendStatus(500, err);
+  }).catch(function(error){
+    res.sendStatus(500, error);
   });
 });
 
@@ -123,8 +103,8 @@ router.delete("/:id", function(req, res, next){
     }
     }).then(function(){
         res.redirect("/books");//redirects to articls path once promise is fulfilled 
-    }).catch(function(err){
-      res.sendStatus(500, err);
+    }).catch(function(error){
+      res.sendStatus(500, error);
     });
   //  res.redirect("/articles");
   });

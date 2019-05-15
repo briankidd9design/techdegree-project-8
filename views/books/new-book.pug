@@ -1,23 +1,23 @@
 extends ../layout.pug
 
-	block content
-		h1 = title
+block content
+	h1= title
 	
-
-		form(action="/books", method="post")
-			p
-				label(for='title') Title
-				input#title(name='title', id = 'title', type='text')
-			p
-				label(for='author') Author
-				input#author(name='author', id = 'author', type='text')
-			p
-				label(for='genre') Genre
-				input#genre(name='genre', id = 'genre', type='text')
-			p
-				label(for='year') Year
-				input#year(name='year', id = 'year', type='text')
-			p
-				input(type='submit', value='Create New Book')
-			p
-				a.button(href='all_books.html') Cancel
+	include ../errors.pug
+	form(action="/books", method="post")
+		p
+			label(for='title') Title
+			input(name='title', id = 'title', type='text')
+		p
+			label(for='author') Author
+			input(name='author', id = 'author', type='text')
+		p
+			label(for='genre') Genre
+			input(name='genre', id = 'genre', type='text')
+		p
+			label(for='year') Year
+			input(name='year', id = 'year', type='text')
+		p
+			input(type='submit', value='Create New Book')
+		p
+			a.button(href='/') Cancel

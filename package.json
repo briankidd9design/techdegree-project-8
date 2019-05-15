@@ -32,5 +32,8 @@
   "bugs": {
     "url": "https://github.com/briankidd9design/techdegree-project-8/issues"
   },
-  "homepage": "https://github.com/briankidd9design/techdegree-project-8#readme"
+  "homepage": "https://github.com/briankidd9design/techdegree-project-8#readme",
+  "devDependencies": {
+    "nodemon": "^1.19.0"
+  }
 }
