@@ -1,7 +1,7 @@
 extends ../layout.pug
 
 block content
-
+  h1= title
   form(action="/books/" + book.id + "?_method=PUT", method="post")
     p
         label(for="title") Title:

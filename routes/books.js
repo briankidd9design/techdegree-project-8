@@ -25,9 +25,9 @@ router.get('/new', function(req, res, next) {
 router.post('/', function(req, res, next) {
   Book.create(req.body).then(function(book){//the req.body is the data from the form
     res.redirect("/books/")//it matches one to one from the form input to the properties on the form models 
-  }).catch(function(error){//when the database is finished saving the article record the database will
-    if(error.name === "SequelizeValidationError"){//redirect to the new article
-      res.render("books/new-book", {//The views require instance methods on each of the article instances
+  }).catch(function(error){//when the database is finished saving the book record the database will
+    if(error.name === "SequelizeValidationError"){//redirect to the new book
+      res.render("books/new-book", {//The views require instance methods on each of the book instances
         book: Book.build(req.body), 
         errors: error.errors,
         title: "New Book"})
@@ -39,25 +39,11 @@ router.post('/', function(req, res, next) {
   }); 
 });
 
-/* Edit book form. */
-router.get("/:id/edit", function(req, res, next){
-  //var article = find(req.params.id);  
-  Article.findById(req.params.id).then(function(article){
-    if (article) {//once the article is found it is put in the form
-       res.render("articles/edit", {article: article, title: "Edit Article"});
-    } else {
-      res.sendStatus(404);
-    }
-  }).catch(function(error){
-    res.sendStatus(500);
-  });
-});
-
 /* GET individual book */
 router.get("/:id", function(req, res, next){
   Book.findByPk(req.params.id).then(function(book){
   if(book){
-    res.render("books/update-book", {book: book, title: book.title});
+    res.render("books/update-book", {book: book, title: `Edit or Delete ${book.title}` });
   } else {
     res.render("page-not-found", { book: {}, title: "Page Not Found" });
   }
@@ -97,7 +83,7 @@ router.put("/:id", function(req, res, next){
 router.delete("/:id", function(req, res, next){
     Book.findByPk(req.params.id).then(function(book){
     if(book){
-      return book.destroy();//and asychronous call that destroys an article
+      return book.destroy();//and asychronous call that destroys a book
     } else {
       res.sendStatus(404);
     }
@@ -106,7 +92,6 @@ router.delete("/:id", function(req, res, next){
     }).catch(function(error){
       res.sendStatus(500, error);
     });
-  //  res.redirect("/articles");
   });
 
 module.exports = router;
