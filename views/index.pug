@@ -3,6 +3,10 @@ extends ./layout.pug
 block content
 
         h1 Books
+        form(action='/books/search' method='GET')
+            input(placeholder="Search for a book...", type="text", name="search")
+            input(type="submit", value="Search")
+        
         p
             a(class="button" href="/books/new") Create New Book
         p#header

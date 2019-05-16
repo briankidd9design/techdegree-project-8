@@ -94,4 +94,44 @@ router.delete("/:id", function(req, res, next){
     });
   });
 
+/* GET Search for Book */
+router.get("/search", (req, res) => {
+  const { search } = req.query;
+  Book.findAll({
+    where: {
+      [Op.or]: [
+        {
+          title: {
+            [Op.like]: `%${search}%`
+          }
+        },
+        {
+          author: {
+            [Op.like]: `%${search}%`
+          }
+        },
+        {
+          genre: {
+            [Op.like]: `%${search}%`
+          }
+        },
+        {
+          year: {
+            [Op.like]: `%${search}%`
+          }
+        }
+      ]
+    }
+  }).then(books => {
+    console.log(books);
+    if(books.length > 0) {
+      res.render('books/index', {books: books, title: "Search Results"});
+    } else {
+      res.render('page-not-found', { book: {}, title: "Page Not Found" } );
+    }
+  }).catch(error => {
+    res.status(500).send(error);
+  });
+});
+  
 module.exports = router;
