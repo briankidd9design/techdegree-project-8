@@ -10,7 +10,7 @@ const Op = Sequelize.Op;
 /* GET books for full list of books */
 router.get('/', function(req, res, next) {
     Book.findAll({order: [["Year", "DESC"]]}).then(function(books){
-      res.render("index", {books: books, title: "Brian's Library" });
+      res.render("books/index", {books: books, title: "Brian's Library" });
     }).catch(function(error){
         res.send(500, error);
      });
@@ -37,6 +37,49 @@ router.post('/', function(req, res, next) {
   }).catch(function(error){
     res.sendStatus(500, error);
   }); 
+});
+
+/* GET Search for Book */
+router.get("/search", (req, res) => {
+  const { search } = req.query;
+
+  //const search = req.body.search;
+
+  Book.findAll({
+    where: {
+      [Op.or]: [
+        {
+          title: {
+            [Op.like]: `%${search}%`
+          }
+        },
+        {
+          author: {
+            [Op.like]: `%${search}%`
+          }
+        },
+        {
+          genre: {
+            [Op.like]: `%${search}%`
+          }
+        },
+        {
+          year: {
+            [Op.like]: `%${search}%`
+          }
+        }
+      ]
+    }
+  }).then(books => {
+    console.log(books);
+    if(books.length > 0) {
+      res.render('books/index', {books: books, title: "Search Results"});
+    } else {
+      res.render('no-results');
+    }
+  }).catch(error => {
+    res.status(500).send(error);
+  });
 });
 
 /* GET individual book */
@@ -94,44 +137,6 @@ router.delete("/:id", function(req, res, next){
     });
   });
 
-/* GET Search for Book */
-router.get("/search", (req, res) => {
-  const { search } = req.query;
-  Book.findAll({
-    where: {
-      [Op.or]: [
-        {
-          title: {
-            [Op.like]: `%${search}%`
-          }
-        },
-        {
-          author: {
-            [Op.like]: `%${search}%`
-          }
-        },
-        {
-          genre: {
-            [Op.like]: `%${search}%`
-          }
-        },
-        {
-          year: {
-            [Op.like]: `%${search}%`
-          }
-        }
-      ]
-    }
-  }).then(books => {
-    console.log(books);
-    if(books.length > 0) {
-      res.render('books/index', {books: books, title: "Search Results"});
-    } else {
-      res.render('page-not-found', { book: {}, title: "Page Not Found" } );
-    }
-  }).catch(error => {
-    res.status(500).send(error);
-  });
-});
+
   
 module.exports = router;

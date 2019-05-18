@@ -1,15 +1,15 @@
-extends ./layout.pug
+extends ../layout.pug
 
 block content
-
+    div.container.fluid
         h1 Books
-        form(action='/books/search' method='GET')
-            input(placeholder="Search for a book...", type="text", name="search")
-            input(type="submit", value="Search")
-        
+        p
+            form(action="/books/search", method="GET")
+                input(placeholder="Search for a book...", type="text", name="search")
+                input(type="submit", value="Search")
         p
             a(class="button" href="/books/new") Create New Book
-        p#header
+        
         table
             thead
                 tr
@@ -25,4 +25,6 @@ block content
                         td= book.author
                         td= book.genre
                         td= book.year
-                
+
+    div(id="paginationLinks")
+    script(src='/scripts/app.js')
