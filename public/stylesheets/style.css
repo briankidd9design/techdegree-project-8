@@ -114,3 +114,11 @@ input[type=text] {
 #paginationLinks ul li {
   display: inline;
 }
+
+#searchButton{
+  margin-left: 0px;
+}
+
+#searchForm{
+  margin-left:-10px;
+}

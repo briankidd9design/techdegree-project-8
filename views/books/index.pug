@@ -1,12 +1,12 @@
 extends ../layout.pug
 
 block content
-    div.container.fluid
+    div
         h1 Books
         p
-            form(action="/books/search", method="GET")
+            form(action="/books/search", method="GET" id="searchForm")
                 input(placeholder="Search for a book...", type="text", name="search")
-                input(type="submit", value="Search")
+                input(type="submit", value="Search" id="searchButton")
         p
             a(class="button" href="/books/new") Create New Book
         
@@ -27,4 +27,4 @@ block content
                         td= book.year
 
     div(id="paginationLinks")
-    script(src='/scripts/app.js')
+    
